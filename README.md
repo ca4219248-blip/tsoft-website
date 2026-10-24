@@ -121,26 +121,27 @@ src/
 
 ## Deploying to GitHub Pages
 
-A workflow is included at `.github/workflows/deploy.yml`.
+This repository is already set up to deploy to GitHub Pages via
+`.github/workflows/deploy.yml`. The workflow runs on every push to `main`, builds the app, and
+publishes it.
 
-1. Push the repository to GitHub (branch `main`).
-2. In **Settings → Pages**, set the source to **GitHub Actions**.
-3. The workflow builds the app and deploys it.
+**Live site:** `https://ca4219248-blip.github.io/tsoft-website/`
 
-If the site is served from a **project path** (e.g. `https://<user>.github.io/<repo>/`), set the
-base path in the workflow:
+If you fork or rename the repository, update the base path in the workflow so asset URLs resolve
+correctly:
 
 ```yaml
 - run: npm run build
   env:
-    VITE_BASE: /<repo-name>/
+    VITE_BASE: /<repo-name>/   # project page (https://<user>.github.io/<repo>/)
 ```
 
-For a **user/organisation page** (`https://<user>.github.io/`), leave `VITE_BASE` as `/`.
+Use `VITE_BASE: /` instead if you deploy to a **user/organisation page**
+(`https://<user>.github.io/`).
 
-SPA routing on static hosts is handled by `public/404.html` plus a small redirect script in
-`index.html`. If you deploy under a project path, change `pathSegmentsToKeep` to `1` in
-`public/404.html`.
+Deep links (e.g. `/admin/dashboard`) work because the workflow copies the built `index.html` to
+`404.html`, so GitHub Pages serves the app shell for unknown paths and the client-side router
+takes over. If you deploy to a different host, apply the same SPA fallback there.
 
 ---
 
